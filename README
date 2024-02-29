@@ -1,4 +1,7 @@
 vogue
 =====
 
-ref: https://github.com/R-K-H/vogue-runway-scraper/blob/master/vogue.js
+	go install go.zakaria.org/vogue@latest
+
+ref:
+ - https://github.com/R-K-H/vogue-runway-scraper/blob/master/vogue.js
