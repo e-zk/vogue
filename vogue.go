@@ -134,8 +134,6 @@ func graphQ(query string) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	fmt.Printf("respb: %s\n", respB)
-
 	return respB, nil
 }
 
