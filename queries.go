@@ -4,6 +4,8 @@ package vogue
 const (
 	qBrands      = "query{allBrands{Brand{name slug}}}"
 	qSeasons     = "query{allSeasons{Season{name slug}}}"
+	qSeasonShows = `query{ allContent( type: ["FashionShowV2"], first: 1000, filter: { season: { slug: "%s" } }) { Content { id GMTPubDate url title slug ... on FashionShowV2 { instantShow brand { name slug } season { name slug year } photosTout { ... on Image { url } } } } } }`
+	qBrandShows  = `query { allContent(type: ["FashionShowV2"], first: 1000, filter: { brand: { slug: "%s" } }) { Content { id GMTPubDate url title slug ... on FashionShowV2 { instantShow brand { name slug } season { name slug year } photosTout { ... on Image { url } } } } } }`
 	qFashionShow = `query {
   fashionShowV2(slug: "%s") {
     GMTPubDate

@@ -93,17 +93,25 @@ type Show struct {
 	Title        string            `json:"title"`
 	FullSlug     string            `json:"slug"`
 	Id           string            `json:"id"`
-	City         map[string]string `json:"city"`
+	City         map[string]string `json:"city,omitempty"`
 	Brand        Brand             `json:"brand"`
 	Season       Season            `json:"season"`
 	HeroImage    ShowImage         `json:"photosTout"`
-	Galleries    ShowGalleries     `json:"galleries"`
+	Galleries    *ShowGalleries    `json:"galleries,omitempty"`
 	Video        *interface{}      `json:"video,omitempty"` // TODO
 }
 
 type showResp struct {
 	Data struct {
 		FashionShowV2 Show `json:"fashionShowV2"`
+	} `json:"data"`
+}
+
+type contentResp struct {
+	Data struct {
+		AllContent struct {
+			Content []Show `json:"Content"`
+		} `json:"allContent"`
 	} `json:"data"`
 }
 
@@ -190,4 +198,38 @@ func GetShow(fullSlug string) (Show, error) {
 	}
 
 	return fs.Data.FashionShowV2, nil
+}
+
+// List all shows for given brand.
+// Does not return show galleries. Use GetShow() for this.
+func GetBrandShows(brandSlug string) ([]Show, error) {
+	b, err := graphQ(fmt.Sprintf(qBrandShows, brandSlug))
+	if err != nil {
+		return []Show{}, err
+	}
+
+	c := contentResp{}
+	err = json.Unmarshal(b, &c)
+	if err != nil {
+		return []Show{}, err
+	}
+
+	return c.Data.AllContent.Content, nil
+}
+
+// List all shows for a given season.
+// Does not return show galleries. Use GetShow() for this.
+func GetSeasonShows(seasonSlug string) ([]Show, error) {
+	b, err := graphQ(fmt.Sprintf(qSeasonShows, seasonSlug))
+	if err != nil {
+		return []Show{}, err
+	}
+
+	c := contentResp{}
+	err = json.Unmarshal(b, &c)
+	if err != nil {
+		return []Show{}, err
+	}
+
+	return c.Data.AllContent.Content, nil
 }
