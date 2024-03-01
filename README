@@ -3,16 +3,16 @@ vogue
 
 golang api for scraping vogue runway fashion shows. work in progress.
 
-	go install go.zakaria.org/vogue/cmd/vogue@latest
-
 cli usage
 ---------
 
-	usage: vogue [-show full_slug | -brands | -seasons]
+	usage: vogue [-brands | -seasons | -brandshows slug | -seasonshows slug | -show full_slug]
 	where: 
-		-show full_slug	print list of image urls for given show
-		-brands		print list of brands
-		-seasons	print list of seasons
+		-brands	           print list of brands
+		-seasons	   print list of seasons
+		-brandshows slug   print list of season/brand slugs from brand
+		-seasonshows slug  print list of season/brand slugs from season
+		-show full_slug	   print list of image urls for given show
 
 ref
 ----
