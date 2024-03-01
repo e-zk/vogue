@@ -13,18 +13,24 @@ const (
 	baseUrl = "https://graphql.vogue.com"
 )
 
-var Timeout time.Duration = time.Second * 6
+// Headers to pass to http.Client when executing requests to the Vogue GraphQL API.
 var Headers map[string][]string = map[string][]string{
 	"Host":         []string{"graphql.vogue.com"},
 	"User-Agent":   []string{"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"},
 	"Content-Type": []string{"application/json"},
 }
 
+// Timeout to pass to http.Client when executing requests.
+// Defaults to 6 seconds.
+var Timeout time.Duration = time.Second * 6
+
+// Brand describes a brand.
 type Brand struct {
 	Name string `json:"name"`
 	Slug string `json:"slug"`
 }
 
+// Season describes a fashion season.
 type Season struct {
 	Name string `json:"name"`
 	Slug string `json:"slug"`
@@ -71,7 +77,7 @@ type ShowGallery struct {
 	} `json:"slidesV2"`
 }
 
-// could this be a map?
+// ShowGalleries holds the each gallery for a fashion show.
 type ShowGalleries struct {
 	Collection *ShowGallery `json:"collection,omitempty"`
 	Atmosphere *ShowGallery `json:"atmosphere,omitempty"`
@@ -80,7 +86,7 @@ type ShowGalleries struct {
 	FrontRow   *ShowGallery `json:"frontRow,omitempty"`
 }
 
-// fashionShowV2
+// Show represents a full fashion show.
 type Show struct {
 	PublishedGMT time.Time         `json:"GMTPubDate"`
 	Url          string            `json:"url"`
@@ -137,6 +143,7 @@ func graphQ(query string) ([]byte, error) {
 	return respB, nil
 }
 
+// GetBrands returns a list of Brand structs.
 func GetBrands() ([]Brand, error) {
 	b, err := graphQ(qBrands)
 	if err != nil {
@@ -152,6 +159,7 @@ func GetBrands() ([]Brand, error) {
 	return bs.Data.AllBrands.Brands, nil
 }
 
+// GetSeasons returns a list of Season structs.
 func GetSeasons() ([]Season, error) {
 	b, err := graphQ(qSeasons)
 	if err != nil {
@@ -167,8 +175,8 @@ func GetSeasons() ([]Season, error) {
 	return ss.Data.AllSeasons.Seasons, nil
 }
 
-// fashionShowV2
-// fullSlug = {season-slug}/{brand-slug}
+// GetShow returns the Show struct for the given fashion show.
+// Runway/fashion shows are distinguished by their fullSlug this is of the format: '{season-slug}/{brand-slug}'.
 func GetShow(fullSlug string) (Show, error) {
 	b, err := graphQ(fmt.Sprintf(qFashionShow, fullSlug))
 	if err != nil {
